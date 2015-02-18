@@ -19,6 +19,8 @@ private:
 class AnalogSensor
 {
 public:
+    // If analog pin is muxed, a pointer to the mux object is required.
+    // If analog pin is not muxed, give a null pointer.
     AnalogSensor(uint8_t pin, AnalogMux* mux, uint8_t muxSel);
 
     // Obtain and return new filtered sample value.
