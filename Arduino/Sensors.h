@@ -36,6 +36,8 @@ private:
 
 };
 
+// Controls the inputs of Modern Device wind sensor.
+// Based on example Arduino code: https://github.com/moderndevice/Wind_Sensor
 class WindSensor
 {
 public:
@@ -44,7 +46,7 @@ public:
 
     // Obtain and return new filtered sample value.
     uint8_t Update();
-}
+};
 
 // Controls a vent damper.
 class VentDamper
