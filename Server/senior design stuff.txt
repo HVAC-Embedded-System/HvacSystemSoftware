@@ -1,0 +1,58 @@
+assumption: bluetooth
+so the raspoberry pi is going to detect the arduino as a device (via bluetooth)
+it can then issue commands to it via program
+
+
+so i have to implement the entire central logic thing basically
+i have to give access to the outside world through the pi to the sensors and stuff
+to control sensors and stuff, there will be open/close methods availabel on the arduino as is already present on github
+it will poll since the pi will be plugged in
+
+
+main program running
+
+main loop
+polling and displaying current status of everything
+updates realtime ish (based on poll time)
+somehow code in an interupt that will allow the user to enter a command following it (could be a while loop waiting for something) idk what
+
+
+eventually add get/set commands for the bosch stuff
+
+look into nest to see how to control that
+
+
+
+
+
+
+.config file idea that lists all of the sensors so the program knows what to look for and what to expect
+data structures:
+soemthing to represent an arduino
+each arduino has a list of sensors which would only ever need a get
+list of motors
+
+class Device {
+	int id;
+	String name;
+	List of sensors;	//these can be their own class
+	List of motors;		//as can these
+}
+
+//initialization: setting up connections
+//open the file to be written to
+
+//pybluez
+
+while(1){
+	//poll everyone to see if anything has changed (need a method for that on arduino side)
+	//if nothing has changed, do nothing
+		//these happen individually
+	//update the file
+	//otherwise, send the changes to the software team and send back the appropriate command to the arduino
+
+	//reconnect to lost devices
+}
+
+so the arduinos are the "servers"
+and the pi is the "client"
