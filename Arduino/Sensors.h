@@ -6,46 +6,55 @@
 class AnalogMux
 {
 public:
+    // Initialize with pin to read for inputs and each select pin.
+    AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2);
     void SetSelect(uint8_t select);
+    void int ReadAnalogPin();
 private:
     uint8_t analogPin;
-    uint8_t selPin[3];
+    uint8_t sel0;
+    uint8_t sel1;
+    uint8_t sel2;
 };
 
 // Class used to obtain measurements from analog signals.
-// Update() must be run many times per second at a fairly
-// constant rate because it uses a first order lag filter to
-// minimize jitter.
 class AnalogSensor
 {
 public:
     // If analog pin is muxed, a pointer to the mux object is required.
-    // If analog pin is not muxed, give a null pointer.
-    AnalogSensor(uint8_t pin, AnalogMux* mux, uint8_t muxSel);
+    AnalogSensor(AnalogMux* mux, uint8_t muxSel);
 
-    // Obtain and return new filtered sample value.
-    uint8_t Update();
+    // If analog pin is not muxed, just a pin number is required.
+    AnalogSensor(uint8_t pin);
+
+    int Read();
 
 private:
     uint8_t pin;
+
     AnalogMux* mux;
     uint8_t muxSel;
-
-    uint8_t last;
-    unsigned long lastUpdateTimeUs;
-
 };
 
 // Controls the inputs of Modern Device wind sensor.
 // Based on example Arduino code: https://github.com/moderndevice/Wind_Sensor
+const float ZERO_WIND_ADJUSTMENT = 0.2;
+
 class WindSensor
 {
 public:
-    WindSensor(uint8_t rvPin,  AnalogMux* rvMux,  uint8_t rvMuxSel,
-               uint8_t tmpPin, AnalogMux* tmpMux, uint8_t tmpMuxSel);
+    WindSensor(AnalogMux* mux, uint8_t rvMuxSel, uint8_t tmpMuxSel);
+    WindSensor(uint8_t rvPin, uint8_t tmpPin);
 
-    // Obtain and return new filtered sample value.
-    uint8_t Update();
+    int Read();
+
+private:
+    uint8_t rvPin;
+    uint8_t tmpPin;
+
+    AnalogMux* mux;
+    uint8_t rvMuxSel;
+    uint8_t tmpMuxSel;
 };
 
 // Controls a vent damper.
