@@ -1,11 +1,12 @@
-#include "Sensors.h"
+#include <Arduino.h>
+#include "Peripherals.h"
 
 /* AnalogMux */
-void AnalogMux::AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2):
-    this->analogPin(analogPin),
-    this->sel0(sel0),
-    this->sel1(sel1),
-    this->sel2(sel2)
+AnalogMux::AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2):
+    analogPin(analogPin),
+    sel0(sel0),
+    sel1(sel1),
+    sel2(sel2)
 {
 }
 
@@ -29,13 +30,13 @@ int AnalogMux::ReadAnalogPin(){
 
 /* AnalogSensor */
 AnalogSensor::AnalogSensor(AnalogMux* mux, uint8_t muxSel):
-    this->mux(mux),
-    this->muxSel(muxSel)
+    mux(mux),
+    muxSel(muxSel)
 {}
 
 AnalogSensor::AnalogSensor(uint8_t pin):
-    this->pin(pin),
-    this->mux(0)
+    pin(pin),
+    mux(0)
 {}
 
 int AnalogSensor::Read()
@@ -57,15 +58,15 @@ int AnalogSensor::Read()
 
 /* WindSensor */
 WindSensor::WindSensor(AnalogMux* mux, uint8_t rvMuxSel, uint8_t tmpMuxSel):
-    this->mux(mux),
-    this->rvMuxSel(rvMuxSel),
-    this->tmpMuxSel(tmpMuxSel)
+    mux(mux),
+    rvMuxSel(rvMuxSel),
+    tmpMuxSel(tmpMuxSel)
 {}
 
 WindSensor::WindSensor(uint8_t rvPin, uint8_t tmpPin):
-    this->rvPin(rvPin),
-    this->tmpPin(tmpPin),
-    this->mux(0)
+    rvPin(rvPin),
+    tmpPin(tmpPin),
+    mux(0)
 {}
 
 float WindSensor::ReadMph()
@@ -143,6 +144,7 @@ Drapes::Drapes(uint8_t pin)
 
 bool Drapes::IsOpen()
 {
+    return false;
 }
 
 void Drapes::Open()

@@ -1,5 +1,7 @@
-#if !defined SENSORS_h
-#define SENSORS_h
+#if !defined PERIPHERALS_h
+#define PERIPHERALS_h
+
+#include <stdint.h>
 
 // Class used to control analog mux that expands the amount
 // of analog inputs the system can use.
@@ -9,7 +11,7 @@ public:
     // Initialize with pin to read for inputs and each select pin.
     AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2);
     void SetSelect(uint8_t select);
-    void int ReadAnalogPin();
+    int ReadAnalogPin();
 private:
     uint8_t analogPin;
     uint8_t sel0;
@@ -46,7 +48,7 @@ public:
     WindSensor(AnalogMux* mux, uint8_t rvMuxSel, uint8_t tmpMuxSel);
     WindSensor(uint8_t rvPin, uint8_t tmpPin);
 
-    int Read();
+    float ReadMph();
 
 private:
     uint8_t rvPin;
