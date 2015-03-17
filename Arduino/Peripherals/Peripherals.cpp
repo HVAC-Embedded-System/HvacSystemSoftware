@@ -39,9 +39,10 @@ AnalogSensor::AnalogSensor(uint8_t pin):
     mux(0)
 {}
 
-int AnalogSensor::Read()
+float AnalogSensor::ReadVolts()
 {
     int reading;
+    float voltage;
 
     if (mux != 0)
     {
@@ -53,7 +54,27 @@ int AnalogSensor::Read()
         reading = analogRead(pin);
     }
 
-    return reading;
+    voltage = ((float)reading * 5.0) / 1024.0;
+
+    return voltage;
+}
+
+float TempSensor::ReadTempC()
+{
+    float tempC;
+
+    tempC = (ReadVolts() - 0.5) * 100;
+
+    return tempC;
+}
+
+float TempSensor::ReadTempF()
+{
+    float tempF;
+
+    tempF = (ReadTempC() * 9.0 / 5.0) + 32.0;
+
+    return tempF;
 }
 
 /* WindSensor */

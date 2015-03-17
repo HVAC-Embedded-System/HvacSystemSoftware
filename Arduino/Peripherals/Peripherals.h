@@ -29,13 +29,29 @@ public:
     // If analog pin is not muxed, just a pin number is required.
     AnalogSensor(uint8_t pin);
 
-    int Read();
+    float ReadVolts();
 
 private:
     uint8_t pin;
 
     AnalogMux* mux;
     uint8_t muxSel;
+};
+
+class TempSensor : public AnalogSensor
+{
+public:
+    TempSensor(AnalogMux* mux, uint8_t muxSel):
+        AnalogSensor(mux, muxSel)
+    {}
+
+    TempSensor(uint8_t pin):
+        AnalogSensor(pin)
+    {}
+
+    float ReadTempC();
+    float ReadTempF();
+private:
 };
 
 // Controls the inputs of Modern Device wind sensor.
