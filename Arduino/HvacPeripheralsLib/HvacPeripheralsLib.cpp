@@ -59,6 +59,7 @@ float AnalogSensor::ReadVolts()
     return voltage;
 }
 
+/* TempSensor */
 float TempSensor::ReadTempC()
 {
     float tempC;
@@ -75,6 +76,49 @@ float TempSensor::ReadTempF()
     tempF = (ReadTempC() * 9.0 / 5.0) + 32.0;
 
     return tempF;
+}
+
+/* IrSensor */
+bool IrSensor::IsHumanPresent()
+{
+    float voltage;
+    bool humanPresent = false;
+
+    voltage = ReadVolts();
+
+    if (voltage >= threshold)
+    {
+        humanPresent = true;
+    }
+    else
+    {
+        humanPresent = false;
+    }
+
+    return humanPresent;
+}
+
+/* LightSensor */
+float LightSensor::ReadOhms()
+{
+    float resistorVolts;
+    float photoVolts;
+    float photoOhms;
+
+    resistorVolts = ReadVolts();
+    photoVolts = 5.0 - resistorVolts;
+
+    photoOhms = (photoVolts * dividerOhms) / resistorVolts;
+
+    return photoOhms;
+}
+
+// Read the intensity of light, in lux, for GM5539 using equation shown in:
+// http://selfbuilt.net/datasheets/GM55.pdf
+const float R10 = 
+const float R100 = 
+float LightSensor::ReadLux()
+{
 }
 
 /* WindSensor */

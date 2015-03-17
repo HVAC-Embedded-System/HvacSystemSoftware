@@ -38,6 +38,7 @@ private:
     uint8_t muxSel;
 };
 
+// Class used to obtain temperature measurements from TMP36 device
 class TempSensor : public AnalogSensor
 {
 public:
@@ -51,8 +52,52 @@ public:
 
     float ReadTempC();
     float ReadTempF();
-private:
 };
+
+const float IR_THRESH_DEFAULT = 2.5; // Default threshold of IR sensor
+
+// Class used to obtain readings from HC-SR501 IR sensor device
+class IrSensor : public AnalogSensor
+{
+public:
+    IrSensor(AnalogMux* mux, uint8_t muxSel, float threshold = IR_THRESH_DEFAULT):
+        AnalogSensor(mux, muxSel),
+        threshold(threshold)
+    {}
+
+    IrSensor(uint8_t pin, float threshold = IR_THRESH_DEFAULT):
+        AnalogSensor(pin),
+        threshold(threshold)
+    {}
+
+    bool IsHumanPresent();
+
+private:
+    float threshold;
+};
+
+// Default voltage divider resistance used with LightSensor
+const float LIGHT_SENSOR_DIV_DEFAULT = 10000; 
+
+// Class used to obtain reading from photoresistor
+class LightSensor : public AnalogSensor
+{
+public:
+   LightSensor (AnalogMux* mux, uint8_t muxSel, float dividerOhms = LIGHT_SENSOR_DIV_DEFAULT):
+        AnalogSensor(mux, muxSel),
+        dividerOhms(dividerOhms)
+    {}
+
+    LightSensor(uint8_t pin, float dividerOhms = LIGHT_SENSOR_DIV_DEFAULT):
+        AnalogSensor(pin),
+        dividerOhms(dividerOhms)
+    {}
+
+    float ReadOhms();
+
+public:
+    float dividerOhms;
+}
 
 // Controls the inputs of Modern Device wind sensor.
 // Based on example Arduino code: https://github.com/moderndevice/Wind_Sensor
