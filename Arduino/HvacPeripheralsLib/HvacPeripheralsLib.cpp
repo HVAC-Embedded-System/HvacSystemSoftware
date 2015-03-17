@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Peripherals.h"
+#include "HvacPeripheralsLib.h"
 
 /* AnalogMux */
 AnalogMux::AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2):

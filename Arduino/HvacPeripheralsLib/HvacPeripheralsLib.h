@@ -1,5 +1,5 @@
-#if !defined PERIPHERALS_h
-#define PERIPHERALS_h
+#if !defined HVACPERIPHERALSLIB_h
+#define HVACPERIPHERALSLIB_h
 
 #include <stdint.h>
 
