@@ -95,9 +95,11 @@ public:
 
     float ReadOhms();
 
+    float ReadLux();
+
 public:
     float dividerOhms;
-}
+};
 
 // Controls the inputs of Modern Device wind sensor.
 // Based on example Arduino code: https://github.com/moderndevice/Wind_Sensor

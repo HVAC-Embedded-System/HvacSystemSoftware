@@ -115,8 +115,8 @@ float LightSensor::ReadOhms()
 
 // Read the intensity of light, in lux, for GM5539 using equation shown in:
 // http://selfbuilt.net/datasheets/GM55.pdf
-const float R10 = 
-const float R100 = 
+//const float R10 = 
+//const float R100 = 
 float LightSensor::ReadLux()
 {
 }
