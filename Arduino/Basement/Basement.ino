@@ -101,4 +101,7 @@ void loop() {
        }
      }       
     }
+    servo1.write(servoAngle1);
+    servo2.write(servoAngle2);
+    servo3.write(servoAngle3);
 }
