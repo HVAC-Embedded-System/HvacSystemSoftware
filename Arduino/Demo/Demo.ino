@@ -35,45 +35,46 @@ void loop() {
 
         while (bluetooth.available()){
             Serial.write(bluetooth.read());
-
-            if (doorOpen){
-                bluetooth.println("Door Open");
-            }
-            else{
-                bluetooth.println("Door Closed");
-            }
-
-            bluetooth.print("Temperature (F): ");
-            bluetooth.print(tempSensor.ReadTempF());
-            bluetooth.println();
-
-            bluetooth.print("IR Sensor (V): ");
-            bluetooth.print(irSensor.ReadVolts());
-            bluetooth.println();
-
-            bluetooth.print("Light Sensor (ohms): ");
-            bluetooth.print(lightSensor.ReadOhms());
-            bluetooth.println();
-
-            bluetooth.print("Wind Speed (mph): ");
-            bluetooth.print(windSensor.ReadMph());
-            bluetooth.println();
-            bluetooth.println();
+            delay(10);
         }
-        
+        if (doorOpen){
+          servoAngle = 10;
+          doorOpen = false;
+          bluetooth.println("Door Closed");
+        }
+        else{
+            servoAngle = 170;
+            doorOpen = true;
+            bluetooth.println("Door Open");
+        }
+
+        bluetooth.print("Temperature (F): ");
+        bluetooth.print(tempSensor.ReadTempF());
+        bluetooth.println();
+
+        bluetooth.print("IR Sensor (V): ");
+        bluetooth.print(irSensor.ReadVolts());
+        bluetooth.println();
+
+        bluetooth.print("Light Sensor (ohms): ");
+        bluetooth.print(lightSensor.ReadOhms());
+        bluetooth.println();
+
+        bluetooth.print("Wind Speed (mph): ");
+        bluetooth.print(windSensor.ReadMph());
+        bluetooth.println();
+        bluetooth.println();
+       
+        bluetooth.print("$");
         Serial.println();
     }
 
     if ((millis() - lastSensorUpdateTime) >= 2000){
         if (doorOpen){
-            servoAngle = 10;
-            doorOpen = false;
-            Serial.println("Door closed");
+            Serial.println("Door open");
         }
         else{
-            servoAngle = 170;
-            doorOpen = true;
-            Serial.println("Door open");
+            Serial.println("Door closed");
         }
         
         Serial.print("Temperature (F): ");
