@@ -11,8 +11,8 @@ String rxMsg;
 
 int servoAngle = 0;
 Servo servo;
-TempSensor tempSensor();
-LightSensor lightSensor();
+TempSensor tempSensor(A1);
+LightSensor lightSensor(A0);
 
 void setup() {
   //begin bluetooth
