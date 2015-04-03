@@ -13,15 +13,15 @@ String rxMsg;
 Servo servo;
 bool doorOpen = false;
 int servoAngle = 0;
-TempSensor tempSensor();
-IrSensor irSensor();
+TempSensor tempSensor(A0);
+IrSensor irSensor(A1);
 
 void setup() {
   //begin bluetooth
   bluetooth.begin(9600);
   Serial.begin(9600);
   //attach servos
-  servo.attach();
+  servo.attach(9);
   
   
 }
@@ -59,11 +59,11 @@ void loop() {
      //otherwise parse msg
      else{
        if(rxMsg.startsWith("open")){
-         //servoAngle = some angle
+         if (!doorOpen) servoAngle = 180;
          bluetooth.println("Bedroom 1 door opened.");
        }
        else if (rxMsg.startsWith("close")){
-         //servoAngle = some angle
+         if (doorOpen) servoAngle = 0;
          bluetooth.println("Bedroom 1 door closed.");
        }
        else{
