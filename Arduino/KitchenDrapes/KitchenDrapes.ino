@@ -1,4 +1,4 @@
-//bedroom 1 drapes arduino code
+//kitchen drapes arduino code
 #include <SoftwareSerial.h>
 #include <HvacPeripheralsLib.h>
 #include <Servo.h>
@@ -43,8 +43,7 @@ void loop() {
        sndData += ("||");
        sndData += ("motor1: ");
        sndData += servoAngle;
-       sndData += ("||");
-     
+       
        //send the data as a string
        bluetooth.println(sndData);
 

@@ -1,4 +1,4 @@
-//basement arduino code
+//bedroom 2 drapes arduino code
 #include <SoftwareSerial.h>
 #include <HvacPeripheralsLib.h>
 #include <Servo.h>
