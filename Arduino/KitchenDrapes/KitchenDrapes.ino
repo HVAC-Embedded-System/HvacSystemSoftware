@@ -6,9 +6,6 @@
 //set up new bluetooth
 SoftwareSerial bluetooth = SoftwareSerial(10,11);
 
-//store bluetooth msg for parsing
-String rxMsg;
-
 int servoAngle = 0;
 Servo servo;
 TempSensor tempSensor(A1);
@@ -25,12 +22,17 @@ void setup() {
 void loop() {
     //if bluetooth available
     if(bluetooth.available()){
+      
+        String rxMsg;
+        
        //read msg to string       
        while(bluetooth.available()){
-         rxMsg += bluetooth.read();
-         Serial.println(rxMsg);
+         char c = bluetooth.read();
+         rxMsg += c;
          delay(10);
        } 
+    
+    Serial.println(rxMsg);
     
      if (rxMsg == "poll"){
        //send all data
@@ -54,12 +56,23 @@ void loop() {
      //otherwise parse msg
      else{
        if(rxMsg.startsWith("open")){
-         servoAngle = 0;                   
-         bluetooth.println("Drapes opened successfully.");
+         servoAngle = 0;
+         servo.write(servoAngle);
+         //delay for 2 seconds while blinds open
+         delay(2000);
+         servoAngle = 90;
+         servo.write(servoAngle);
+         drapesOpen = true;                 
+         bluetooth.println("ok$");
        }
        else if (rxMsg.startsWith("close")){
-         servoAngle = 360;
-         bluetooth.println("Drapes closed successfully.");    
+        servoAngle = 180;
+        servo.write(servoAngle);
+        delay(2000);
+        servoAngle = 90;
+        servo.write(servoAngle);
+        drapesOpen = false;
+        bluetooth.println("ok$");   
        }
        else{
          Serial.println("Unidentified command");
@@ -67,5 +80,4 @@ void loop() {
        }
      }       
     }
-    servo.write(servoAngle);
 }

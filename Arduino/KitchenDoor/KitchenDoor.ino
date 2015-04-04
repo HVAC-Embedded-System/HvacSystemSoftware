@@ -6,9 +6,6 @@
 //set up new bluetooth
 SoftwareSerial bluetooth = SoftwareSerial(10,11);
 
-//store bluetooth msg for parsing
-String rxMsg;
-
 //hardware connections
 Servo servo;
 bool doorOpen = false;
@@ -27,16 +24,20 @@ void setup() {
 }
 
 void loop() {
+    
+    String rxMsg;
+    
     //if bluetooth available
     if(bluetooth.available()){
       
        //read msg to string       
        while(bluetooth.available()){
          rxMsg += bluetooth.read();
-         Serial.println(rxMsg);
          delay(10);
        } 
-    
+     
+     Serial.println(rxMsg);
+             
      if (rxMsg == "poll"){
        //send all data
        String sndData;
@@ -59,12 +60,12 @@ void loop() {
      //otherwise parse msg
      else{
        if(rxMsg.startsWith("open")){
-         //servoAngle = some angle
-         bluetooth.println("Kitchen door opened.");
+         servoAngle = 170;
+         bluetooth.println("ok$");
        }
        else if (rxMsg.startsWith("close")){
-         //servoAngle = some angle
-         bluetooth.println("Kitchen door closed.");
+         servoAngle = 10;
+         bluetooth.println("ok$");
        }
        else{
          Serial.println("Unidentified command");

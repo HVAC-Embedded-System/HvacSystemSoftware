@@ -6,9 +6,6 @@
 //set up new bluetooth
 SoftwareSerial bluetooth = SoftwareSerial(10,11);
 
-//store bluetooth msg for parsing
-String rxMsg;
-
 //hardware connections
 Servo servo1, servo2, servo3, servo4;
 bool door1Open = false;
@@ -28,21 +25,27 @@ void setup() {
   bluetooth.begin(9600);
   Serial.begin(9600);
   //attach servos
-  servo.attach();
-  
-  
+  servo1.attach();
+  servo2.attach();
+  servo3.attach();
+  servo4.attach();  
 }
 
 void loop() {
+  
+    String rxMsg;  
+  
     //if bluetooth available
     if(bluetooth.available()){
       
        //read msg to string       
        while(bluetooth.available()){
-         rxMsg += bluetooth.read();
-         Serial.println(rxMsg);
+         char c = bluetooth.read();
+         rxMsg += c;
          delay(10);
        } 
+    
+     Serial.println(rxMsg);
     
      if (rxMsg == "poll"){
        //send all data
@@ -84,12 +87,44 @@ void loop() {
      //otherwise parse msg
      else{
        if(rxMsg.startsWith("open")){
-         //servoAngle = some angle
-
+         int delim = rxMsg.indexOf(":");
+         int motorID = rxMsg.charAt(delim+2);
+         if (motorID == 1){
+           servoAngle1 = 170;
+           door1Open = true;
+         }
+         else if (motorID == 2){
+           servoAngle2 = 170;
+           door2Open = true;
+         }
+         bluetooth.println("ok$");
        }
        else if (rxMsg.startsWith("close")){
-         //servoAngle = some angle
+         int delim = rxMsg.indexOf(":");
+         int motorID = rxMsg.charAt(delim+2);
+         if (motorID == 1){
+           servoAngle1 = 10;
+           door1Open = false;
+         }
+         else if (motorID == 2){
+           servoAngle2 = 10;
+           door2Open = false;
+         }
+         bluetooth.println("ok$");
 
+       }
+       else if (rxMsg.startsWith("change")){
+         int delim = rxMsg.indexOf(":");
+         int motorID = rxMsg.charAt(delim+2);
+         String angleStr = rxMsg.substring(motorID+2);
+         int angle = angleStr.toInt();
+         if (motorID == 3){
+           servoAngle3 = angle;  
+         }
+         else if (motorID == 4){
+           servoAngle4 = angle;
+         }       
+         bluetooth.println("ok$");
        }
        else{
          Serial.println("Unidentified command");

@@ -6,9 +6,6 @@
 //set up new bluetooth
 SoftwareSerial bluetooth = SoftwareSerial(10,11);
 
-//store bluetooth msg for parsing
-String rxMsg;
-
 //declare 3 wind sensors here
 WindSensor windSensor1();
 WindSensor windSensor2();
@@ -26,42 +23,53 @@ void setup() {
   bluetooth.begin(9600);
   Serial.begin(9600);
   //attach servos
-  
-  
-  
+  servo1.attach();
+  servo2.attach();
+  servo3.attach();
 }
 
 void loop() {
     //if bluetooth available
     if(bluetooth.available()){
       
+        //String to store message from bluetooth
+        //Define here to reset string each iteration
+        String rxMsg;
+      
        //read msg to string       
        while(bluetooth.available()){
-         rxMsg += bluetooth.read();
-         Serial.println(rxMsg);
+         //store read data to char
+         char c = bluetooth.read();
+         //append char to string
+         rxMsg += c;
          delay(10);
        } 
+        
+       //print to serial for debugging       
+       Serial.println(rxMsg);
     
-     if (rxMsg == "poll"){
-       //send all data
+     if (rxMsg.equals("poll")){
+       //append all data to a string
        String sndData;
        sndData +=("motor1: ");
        sndData += servoAngle1;
        sndData += ("||");
        sndData += ("wind1: ");
        sndData += windSensor1.ReadMph();
+       sndData += ("||");
        sndData +=("motor2: ");
        sndData += servoAngle2;
        sndData += ("||");
        sndData += ("wind2: ");
        sndData += windSensor2.ReadMph();
+       sndData += ("||");
        sndData +=("motor3: ");
        sndData += servoAngle3;
        sndData += ("||");
        sndData += ("wind3: ");
        sndData += windSensor3.ReadMph();
        
-       //send the data as a string
+       //send the data
        bluetooth.println(sndData);
 
        //print end char
@@ -70,32 +78,25 @@ void loop() {
     
      //otherwise parse msg
      else{
-       if(rxMsg.startsWith("open")){
+       if(rxMsg.startsWith("change")){
          //find id of motor to be opened
          int delim = rxMsg.indexOf(":");
          int motorID = rxMsg.charAt(delim+2);
+         String angleStr = rxMsg.substring(motorID+2);
+         int angle = angleStr.toInt();
          //open motor code here
-                   
-         bluetooth.println("Motor " +motorID+ " opened successfully.");
+         if(motorID == 1){
+           servoAngle1 = angle;
+          }
+          else if (motorID == 2){
+            servoAngle2 = angle;
+          }    
+          else if (motorID == 3){
+            servoAngle3 = angle;
+          }          
+         bluetooth.println("ok$");
        }
-       else if (rxMsg.startsWith("close")){
-         //find id of motor to close
-         int delim = rxMsg.indexOf(":");
-         char motorID = rxMsg.charAt(delim+2);
-         //close motor code here
-           if (motorID=='1'){
-             //servoAngle1 = some angle
-           }
-           else if (motorID == '2'){
-             //servoAngle2 = some angle
-           }
-           else (motorID == '3'){
-             //servoAngle3 = some angle
-           }
-         //send success message
-         bluetooth.println("Motor " +motorID+ " closed successfully.");    
-       }
-       else{
+      else{
          Serial.println("Unidentified command");
          bluetooth.println("Unidentified command");
        }

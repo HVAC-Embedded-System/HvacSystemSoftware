@@ -18,15 +18,15 @@ void setup() {
   bluetooth.begin(9600);
   Serial.begin(9600);
   //attach servos
-  servo.attach(9);
-  
-  
+  servo.attach(9);  
 }
 
 void loop() {
     //if bluetooth available
     if(bluetooth.available()){
-      
+        
+        //String to store message from bluetooth
+        //Define here to reset string each iteration
         String rxMsg;
         
        //read msg to string       
@@ -35,7 +35,7 @@ void loop() {
          rxMsg += c;
          delay(10);
        } 
-
+     //print for debugging
      Serial.println(rxMsg);
     
      if (rxMsg.equals("poll")){
