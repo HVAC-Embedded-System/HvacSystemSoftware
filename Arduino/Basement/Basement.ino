@@ -4,7 +4,7 @@
 #include <Servo.h>
 
 //set up new bluetooth
-SoftwareSerial bluetooth = SoftwareSerial(10,11);
+SoftwareSerial bluetooth = SoftwareSerial(12,13);
 
 //declare 3 wind sensors here
 WindSensor windSensor1(A1, A0);
@@ -16,7 +16,8 @@ WindSensor windSensor3(A5, A4);
 int servoAngle1 = 0;
 int servoAngle2 = 0;
 int servoAngle3 = 0;
-Servo servo1, servo2, servo3;
+int servoAngle4 = 0;
+Servo servo1, servo2, servo3, servo4;
 
 void setup() {
   //begin bluetooth
@@ -24,14 +25,15 @@ void setup() {
   Serial.begin(9600);
   //attach servos
   servo1.attach(5);
-  servo2.attach(6);
-  servo3.attach(9);
+  servo2.attach(9);
+  servo3.attach(6);
+  servo4.attach(10);
 }
 
 void loop() {
     //if bluetooth available
     if(bluetooth.available()){
-      
+        Serial.println("Connected");
         //String to store message from bluetooth
         //Define here to reset string each iteration
         String rxMsg;
@@ -68,6 +70,8 @@ void loop() {
        sndData += ("||");
        sndData += ("wind3: ");
        sndData += windSensor3.ReadMph();
+       sndData +=("motor4: ");
+       sndData += servoAngle4;
        
        //send the data
        bluetooth.println(sndData);
@@ -81,9 +85,11 @@ void loop() {
        if(rxMsg.startsWith("change")){
          //find id of motor to be opened
          int delim = rxMsg.indexOf(":");
-         int motorID = rxMsg.charAt(delim+2);
-         String angleStr = rxMsg.substring(motorID+2);
-         int angle = angleStr.toInt();
+         int motorID = rxMsg.charAt(delim+2) - 48;
+         int angle = rxMsg.substring(delim+4).toInt();
+         
+         Serial.println(motorID);
+         Serial.println(angle);
          //open motor code here
          if(motorID == 1){
            servoAngle1 = angle;
@@ -93,7 +99,10 @@ void loop() {
           }    
           else if (motorID == 3){
             servoAngle3 = angle;
-          }          
+          }   
+          else if (motorID == 4){
+            servoAngle4 = angle;
+          }       
          bluetooth.println("ok$");
        }
       else{
@@ -102,7 +111,9 @@ void loop() {
        }
      }       
     }
-    servo1.write(servoAngle1);
-    servo2.write(servoAngle2);
-    servo3.write(servoAngle3);
+
+  servo1.write(servoAngle1);
+  servo2.write(servoAngle2);
+  servo3.write(servoAngle3);
+  servo4.write(servoAngle4);
 }
