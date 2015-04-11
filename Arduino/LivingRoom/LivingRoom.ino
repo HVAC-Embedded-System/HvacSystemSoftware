@@ -11,7 +11,7 @@ Servo servo;
 bool drapesOpen = false;
 TempSensor tempSensor(A1);
 LightSensor lightSensor(A0);
-IRSensor irSensor();
+IRSensor irSensor(A2);
 
 void setup() {
   //begin bluetooth
