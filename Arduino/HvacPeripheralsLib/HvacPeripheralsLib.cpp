@@ -161,6 +161,7 @@ float WindSensor::ReadMph()
     float zeroWindReference;
     float zeroWindVolts;
     float windSpeedMph;
+    float tempCtimes100;
 
     if (mux != 0)
     {
@@ -179,7 +180,7 @@ float WindSensor::ReadMph()
     // Calculate wind speed from sensor readings.
     // Equations taken from Modern Device Arduino code: https://github.com/moderndevice/Wind_Sensor
     rvWindVolts = rvReading * 0.0048828125;
-
+    TempCtimes100 = (0.005 *((float)tmpReading * (float)tmpReading)) - (16.862 * (float)tmpReading) + 9075.4;
     zeroWindReference = -0.0006 * (tmpReading * tmpReading) + 1.0727 * tmpReading + 47.172;
     zeroWindVolts = (zeroWindReference * 0.0048828125) - ZERO_WIND_ADJUSTMENT;
 
