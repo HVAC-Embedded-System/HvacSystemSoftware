@@ -9,14 +9,16 @@ class AnalogMux
 {
 public:
     // Initialize with pin to read for inputs and each select pin.
-    AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2);
+    AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2, uint8_t sel3);
     void SetSelect(uint8_t select);
+    uint8_t GetSelect();
     int ReadAnalogPin();
 private:
     uint8_t analogPin;
     uint8_t sel0;
     uint8_t sel1;
     uint8_t sel2;
+    uint8_t sel3;
 };
 
 // Class used to obtain measurements from analog signals.
@@ -101,10 +103,6 @@ public:
     float dividerOhms;
 };
 
-// Controls the inputs of Modern Device wind sensor.
-// Based on example Arduino code: https://github.com/moderndevice/Wind_Sensor
-const float ZERO_WIND_ADJUSTMENT = 0.2;
-
 class WindSensor
 {
 public:
@@ -112,6 +110,8 @@ public:
     WindSensor(uint8_t rvPin, uint8_t tmpPin);
 
     float ReadMph();
+    float ReadRv();
+    float ReadTmp();
 
 private:
     uint8_t rvPin;

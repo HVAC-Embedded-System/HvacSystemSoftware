@@ -2,11 +2,12 @@
 #include "HvacPeripheralsLib.h"
 
 /* AnalogMux */
-AnalogMux::AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2):
+AnalogMux::AnalogMux(uint8_t analogPin, uint8_t sel0, uint8_t sel1, uint8_t sel2, uint8_t sel3):
     analogPin(analogPin),
     sel0(sel0),
     sel1(sel1),
-    sel2(sel2)
+    sel2(sel2),
+    sel3(sel3)
 {
 }
 
@@ -14,14 +15,30 @@ void AnalogMux::SetSelect(uint8_t select){
     bool sel0State;
     bool sel1State;
     bool sel2State;
+    bool sel3State;
 
-    sel0State = select & 0x01 ? HIGH : LOW;
-    sel1State = select & 0x02 ? HIGH : LOW;
-    sel2State = select & 0x04 ? HIGH : LOW;
+    sel0State = (select) & 0x01 ? HIGH : LOW;
+    sel1State = (select >> 1) & 0x01 ? HIGH : LOW;
+    sel2State = (select >> 2) & 0x01 ? HIGH : LOW;
+    sel3State = (select >> 3) & 0x01 ? HIGH : LOW;
 
     digitalWrite(sel0, sel0State);
     digitalWrite(sel1, sel1State);
     digitalWrite(sel2, sel2State);
+    digitalWrite(sel3, sel3State);
+
+    delay(10);
+}
+
+uint8_t AnalogMux::GetSelect() {
+    uint8_t select = 0;
+
+    select |= digitalRead(sel0) == HIGH ? 0x01 : 0;
+    select |= digitalRead(sel1) == HIGH ? 0x02 : 0;
+    select |= digitalRead(sel2) == HIGH ? 0x04 : 0;
+    select |= digitalRead(sel3) == HIGH ? 0x08 : 0;
+
+    return select;
 }
 
 int AnalogMux::ReadAnalogPin(){
@@ -134,12 +151,13 @@ WindSensor::WindSensor(uint8_t rvPin, uint8_t tmpPin):
     mux(0)
 {}
 
+const float ZERO_WIND_ADJUSTMENT = 0.2;
+
 float WindSensor::ReadMph()
 {
     float rvReading;
     float tmpReading;
     float rvWindVolts;
-    float tempCTimes100;
     float zeroWindReference;
     float zeroWindVolts;
     float windSpeedMph;
@@ -160,12 +178,38 @@ float WindSensor::ReadMph()
 
     // Calculate wind speed from sensor readings.
     // Equations taken from Modern Device Arduino code: https://github.com/moderndevice/Wind_Sensor
-    zeroWindReference = (-0.0006 * tmpReading * tmpReading) + (1.0727 * tmpReading) + 47.172;
-    zeroWindVolts = (0.0048828125 * zeroWindReference) - ZERO_WIND_ADJUSTMENT;
+    rvWindVolts = rvReading * 0.0048828125;
 
-    rvWindVolts = 0.0048828125 * rvReading;
+    zeroWindReference = -0.0006 * (tmpReading * tmpReading) + 1.0727 * tmpReading + 47.172;
+    zeroWindVolts = (zeroWindReference * 0.0048828125) - ZERO_WIND_ADJUSTMENT;
 
-    windSpeedMph = pow(((rvWindVolts - zeroWindVolts) / .23), 2.7265);
+    windSpeedMph = pow(((rvWindVolts - zeroWindVolts) / .2300), 2.7265);
+}
+
+float WindSensor::ReadRv()
+{
+    if (mux != 0)
+    {
+        mux->SetSelect(rvMuxSel);
+        return (float) (mux->ReadAnalogPin());
+    }
+    else
+    {
+        return (float) (analogRead(rvPin));
+    }
+}
+
+float WindSensor::ReadTmp()
+{
+    if (mux != 0)
+    {
+        mux->SetSelect(tmpMuxSel);
+        return (float) (mux->ReadAnalogPin());
+    }
+    else
+    {
+        return (float) (analogRead(tmpPin));
+    }
 }
 
 /* VentDamper */
@@ -218,4 +262,4 @@ void Drapes::Open()
 
 void Drapes::Close()
 {
-}
+}                    

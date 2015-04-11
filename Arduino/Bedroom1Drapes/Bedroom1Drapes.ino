@@ -8,6 +8,7 @@ SoftwareSerial bluetooth = SoftwareSerial(10,11);
 
 int servoAngle = 0;
 Servo servo;
+bool drapesOpen = false;
 TempSensor tempSensor(A1);
 LightSensor lightSensor(A0);
 
@@ -23,11 +24,17 @@ void loop() {
   //store bluetooth msg for parsing
   String rxMsg;
   
+  /*
+  Serial.print(tempSensor.ReadTempF());
+  Serial.print("   ");
+  Serial.println(lightSensor.ReadOhms());
+  */
+  
     //if bluetooth available
     if(bluetooth.available()){
        //read msg to string       
        while(bluetooth.available()){
-         char c = bluetooth.read()
+         char c = bluetooth.read();
          rxMsg += c;
          delay(10);
        } 

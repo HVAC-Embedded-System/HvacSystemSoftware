@@ -8,9 +8,10 @@ SoftwareSerial bluetooth = SoftwareSerial(10,11);
 
 int servoAngle = 0;
 Servo servo;
+bool drapesOpen;
 TempSensor tempSensor(A1);
 LightSensor lightSensor(A0);
-IRSensor irSensor();
+IrSensor irSensor(A2);
 
 void setup() {
   //begin bluetooth
@@ -23,6 +24,15 @@ void setup() {
 void loop() {
     //store bluetooth msg for parsing
     String rxMsg;
+    
+    /*
+    Serial.print(tempSensor.ReadTempF());
+    Serial.print("   ");
+    Serial.print(lightSensor.ReadOhms());
+    Serial.print("   ");
+    Serial.print(irSensor.ReadVolts());
+    Serial.println();
+    */
   
     //if bluetooth available
     if(bluetooth.available()){

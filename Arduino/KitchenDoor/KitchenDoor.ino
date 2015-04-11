@@ -10,15 +10,15 @@ SoftwareSerial bluetooth = SoftwareSerial(10,11);
 Servo servo;
 bool doorOpen = false;
 int servoAngle = 0;
-TempSensor tempSensor();
-IrSensor irSensor();
+TempSensor tempSensor(A0);
+IrSensor irSensor(A1);
 
 void setup() {
   //begin bluetooth
   bluetooth.begin(9600);
   Serial.begin(9600);
   //attach servos
-  servo.attach();
+  servo.attach(9);
   
   
 }

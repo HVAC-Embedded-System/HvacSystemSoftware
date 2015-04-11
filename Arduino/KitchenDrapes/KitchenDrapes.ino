@@ -8,6 +8,7 @@ SoftwareSerial bluetooth = SoftwareSerial(10,11);
 
 int servoAngle = 0;
 Servo servo;
+int drapesOpen = 0;
 TempSensor tempSensor(A1);
 LightSensor lightSensor(A0);
 

@@ -7,9 +7,9 @@
 SoftwareSerial bluetooth = SoftwareSerial(10,11);
 
 //declare 3 wind sensors here
-WindSensor windSensor1();
-WindSensor windSensor2();
-WindSensor windSensor3();
+WindSensor windSensor1(A1, A0);
+WindSensor windSensor2(A3, A2);
+WindSensor windSensor3(A5, A4);
 
 //give these better names
 //correlating to where the duct goes
@@ -23,9 +23,9 @@ void setup() {
   bluetooth.begin(9600);
   Serial.begin(9600);
   //attach servos
-  servo1.attach();
-  servo2.attach();
-  servo3.attach();
+  servo1.attach(5);
+  servo2.attach(6);
+  servo3.attach(9);
 }
 
 void loop() {

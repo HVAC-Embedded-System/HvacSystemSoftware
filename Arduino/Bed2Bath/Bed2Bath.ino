@@ -14,26 +14,40 @@ int servoAngle1 = 0;
 int servoAngle2 = 0;
 int servoAngle3 = 0;
 int servoAngle4 = 0;
-TempSensor tempSensor1();
-TempSensor tempSensor2();
-IrSensor irSensor();
-WindSensor windSensor1();
-WindSensor windSensor2();
+AnalogMux mux(A0, 7, 6, 5, 4);
+TempSensor tempSensor1(&mux, 0x0);
+TempSensor tempSensor2(&mux, 1);
+IrSensor irSensor(&mux, 2);
+WindSensor windSensor1(A2, A1);
+WindSensor windSensor2(A4, A3);
 
 void setup() {
   //begin bluetooth
   bluetooth.begin(9600);
   Serial.begin(9600);
   //attach servos
-  servo1.attach();
-  servo2.attach();
-  servo3.attach();
-  servo4.attach();  
+  servo1.attach(9);
+  servo2.attach(3);
+  servo3.attach(13);
+  servo4.attach(12);
 }
 
 void loop() {
   
     String rxMsg;  
+    tempSensor2.ReadTempF();
+    //irSensor.ReadVolts();
+    /*
+    Serial.print(tempSensor1.ReadTempF());
+    Serial.print("   ");
+    Serial.println(mux.GetSelect(), HEX);
+    */
+    /*
+    Serial.print("   ");
+    Serial.print(tempSensor1.ReadTempF());
+    Serial.print("   ");
+    Serial.println(irSensor.ReadVolts());
+    */
   
     //if bluetooth available
     if(bluetooth.available()){

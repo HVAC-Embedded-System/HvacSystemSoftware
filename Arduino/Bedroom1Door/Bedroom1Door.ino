@@ -22,6 +22,12 @@ void setup() {
 }
 
 void loop() {
+    /*
+    Serial.print(tempSensor.ReadTempF());
+    Serial.print("   ");
+    Serial.println(irSensor.ReadVolts());
+    */
+    
     //if bluetooth available
     if(bluetooth.available()){
         
