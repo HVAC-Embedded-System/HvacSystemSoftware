@@ -20,36 +20,49 @@ LightSensor lightSensor(A3);
 WindSensor windSensor(A1, A0);
 
 bool doorOpen = false;
-int servoAngle = 0;
+int servoAngle = 10;
 Servo servo;
 
 void setup() {
     bluetooth.begin(9600);
-    Serial.begin(9600);
+    Serial.begin(115200);
     servo.attach(9);
 }
 
 void loop() {
     if (bluetooth.available()){
+        
+        float temp = tempSensor.ReadTempF();
+        
         Serial.print("Msg rx: ");
 
         while (bluetooth.available()){
-            Serial.write(bluetooth.read());
-            delay(10);
+            char c = bluetooth.read();
+            Serial.print(c);
+            //Serial.write("\0");
+            
+            if (c == '1'){
+                doorOpen = true;
+                servoAngle = 170;
+            }
+            else{
+                doorOpen = false;
+                servoAngle = 10;
+            }
+            
+            delay(1);
         }
+        Serial.println();
+        
         if (doorOpen){
-          servoAngle = 10;
-          doorOpen = false;
-          bluetooth.println("Door Closed");
+          bluetooth.println("Door Open");
         }
         else{
-            servoAngle = 170;
-            doorOpen = true;
-            bluetooth.println("Door Open");
+            bluetooth.println("Door Closed");
         }
 
         bluetooth.print("Temperature (F): ");
-        bluetooth.print(tempSensor.ReadTempF());
+        bluetooth.print(temp);
         bluetooth.println();
 
         bluetooth.print("IR Sensor (V): ");
@@ -60,8 +73,10 @@ void loop() {
         bluetooth.print(lightSensor.ReadOhms());
         bluetooth.println();
 
-        bluetooth.print("Wind Speed (mph): ");
-        bluetooth.print(windSensor.ReadMph());
+        bluetooth.print("Wind Speed: tmp: ");
+        bluetooth.print(windSensor.ReadTmp());
+        bluetooth.print("   rv: ");
+        bluetooth.print(windSensor.ReadRv());
         bluetooth.println();
         bluetooth.println();
        
@@ -89,8 +104,10 @@ void loop() {
         Serial.print(lightSensor.ReadOhms());
         Serial.println();
 
-        Serial.print("Wind Speed (mph): ");
-        Serial.print(windSensor.ReadMph());
+        Serial.print("Wind Speed: tmp: ");
+        Serial.print(windSensor.ReadTmp());
+        Serial.print("   rv: ");
+        Serial.print(windSensor.ReadRv());
         Serial.println();
         Serial.println();
         
