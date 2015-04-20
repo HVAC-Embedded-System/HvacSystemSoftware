@@ -11,6 +11,7 @@ Servo servo;
 int drapesOpen = 0;
 TempSensor tempSensor(A1);
 LightSensor lightSensor(A0);
+IrSensor irSensor(A2);
 
 void setup() {
   //begin bluetooth
@@ -46,7 +47,10 @@ void loop() {
        sndData += ("||");
        sndData += ("motor1: ");
        sndData += servoAngle;
-       
+       sndData += ("||");
+       sndData += ("ir: ");
+       sndData += irSensor.ReadVolts();
+        
        //send the data as a string
        bluetooth.println(sndData);
 
