@@ -4,7 +4,7 @@
 #include <Servo.h>
 
 //set up new bluetooth
-SoftwareSerial bluetooth = SoftwareSerial(12,13);
+SoftwareSerial bluetooth = SoftwareSerial(2,4);
 
 //declare 3 wind sensors here
 WindSensor windSensor1(A1, A0);
@@ -70,6 +70,7 @@ void loop() {
        sndData += ("||");
        sndData += ("wind3: ");
        sndData += windSensor3.ReadMph();
+       sndData += ("||");       
        sndData +=("motor4: ");
        sndData += servoAngle4;
        
@@ -110,8 +111,8 @@ void loop() {
          bluetooth.println("Unidentified command");
        }
      }       
-    }
-
+    }  
+  
   servo1.write(servoAngle1);
   servo2.write(servoAngle2);
   servo3.write(servoAngle3);

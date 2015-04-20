@@ -9,7 +9,7 @@ SoftwareSerial bluetooth = SoftwareSerial(10,11);
 //hardware connections
 Servo servo;
 bool doorOpen = false;
-int servoAngle = 0;
+int servoAngle = 90;
 TempSensor tempSensor(A0);
 IrSensor irSensor(A1);
 
@@ -66,12 +66,20 @@ void loop() {
      //otherwise parse msg
      else{
        if(rxMsg.startsWith("open")){
-           servoAngle = 170;
+           servoAngle = 120;
+           servo.write(servoAngle);
+           delay(5000);
+           servo.write(90);
+           delay(5000);
            doorOpen = true;
          bluetooth.println("ok$");
        }
        else if (rxMsg.startsWith("close")){
-           servoAngle = 10;
+           servoAngle = 60;
+           servo.write(servoAngle);
+           delay(5000);
+           servo.write(90);
+           delay(5000);
            doorOpen = false;
          bluetooth.println("ok$");
        }
@@ -82,5 +90,5 @@ void loop() {
      }       
     }
     
-    servo.write(servoAngle);
+    servo.write(90);
 }
