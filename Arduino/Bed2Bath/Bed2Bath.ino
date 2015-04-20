@@ -30,6 +30,8 @@ void setup() {
   servo2.attach(3);
   servo3.attach(13);
   servo4.attach(12);
+  
+  
 }
 
 void loop() {
@@ -109,10 +111,18 @@ void loop() {
          int motorID = rxMsg.charAt(delim+2);
          if (motorID == 1){
            servoAngle1 = 170;
+           servo1.write(servoAngle1);
+           delay(5000);
+           servoAngle1 = 95;
+           servo1.write(servoAngle1);
            door1Open = true;
          }
          else if (motorID == 2){
            servoAngle2 = 170;
+           servo1.write(servoAngle2);
+           delay(5000);
+           servoAngle2 = 94;
+           servo1.write(servoAngle2);
            door2Open = true;
          }
          bluetooth.println("ok$");
@@ -122,10 +132,18 @@ void loop() {
          int motorID = rxMsg.charAt(delim+2);
          if (motorID == 1){
            servoAngle1 = 10;
+           servo1.write(servoAngle1);
+           delay(5000);
+           servoAngle1 = 95;
+           servo1.write(servoAngle1);
            door1Open = false;
          }
          else if (motorID == 2){
            servoAngle2 = 10;
+           servo1.write(servoAngle2);
+           delay(5000);
+           servoAngle2 = 94;
+           servo1.write(servoAngle2);
            door2Open = false;
          }
          bluetooth.println("ok$");
@@ -150,6 +168,13 @@ void loop() {
        }
      }       
     }
+    
+    servoAngle1 = 95;
+    //servoAngle1 = 170;
+    
+    
+    servoAngle2 = 94;
+    //servoAngle2 = 0;
     
     servo1.write(servoAngle1);
     servo2.write(servoAngle2);
