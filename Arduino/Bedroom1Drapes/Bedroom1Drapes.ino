@@ -18,6 +18,8 @@ void setup() {
   Serial.begin(9600);
   //attach servos
   servo.attach(3);
+  servoAngle = 94;
+  servo.write(servoAngle);
 }
 
 void loop() {
@@ -67,8 +69,8 @@ void loop() {
         servoAngle = 0;
         servo.write(servoAngle);
         //delay for 2 seconds while blinds open
-        delay(2000);
-        servoAngle = 90;
+        delay(20000);
+        servoAngle = 94;
         servo.write(servoAngle);
         drapesOpen = true;                 
         bluetooth.println("ok$");
@@ -76,8 +78,8 @@ void loop() {
        else if (rxMsg.startsWith("close")){
          servoAngle = 180;
          servo.write(servoAngle);
-         delay(2000);
-         servoAngle = 90;
+         delay(20000);
+         servoAngle = 94;
          servo.write(servoAngle);
          drapesOpen = false;
          bluetooth.println("ok$");    
@@ -88,4 +90,6 @@ void loop() {
        }
      }       
     }
+        
+    servo.write(94);
 }
